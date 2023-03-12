@@ -80,7 +80,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
 
         return player
 
-    @commands.command(name='join', aliases=aliases['join'], description='connects to voice')
+    @commands.command(name='join', aliases=aliases['join'], description='Connects to voice')
     async def connect_(self, ctx, *, channel: discord.VoiceChannel=None):
         '''Connect to voice.
         Parameters
@@ -139,7 +139,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         vc = ctx.voice_client
 
         if not vc or not vc.is_playing():
-            embed = discord.Embed(title='', description='I am currently not playing anything', color=discord.Color.green())
+            embed = discord.Embed(title='', description="I'm currently not playing anything", color=discord.Color.green())
             return await ctx.send(embed=embed)
         elif vc.is_paused():
             return
@@ -153,7 +153,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
-            embed = discord.Embed(title='', description='I'm not connected to a voice channel', color=discord.Color.green())
+            embed = discord.Embed(title='', description="I'm not connected to a voice channel", color=discord.Color.green())
             return await ctx.send(embed=embed)
         elif not vc.is_paused():
             return
@@ -167,7 +167,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
-            embed = discord.Embed(title='', description='I'm not connected to a voice channel', color=discord.Color.green())
+            embed = discord.Embed(title='', description="I'm not connected to a voice channel", color=discord.Color.green())
             return await ctx.send(embed=embed)
 
         if vc.is_paused():
@@ -184,7 +184,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
-            embed = discord.Embed(title='', description='I'm not connected to a voice channel', color=discord.Color.green())
+            embed = discord.Embed(title='', description="I'm not connected to a voice channel", color=discord.Color.green())
             return await ctx.send(embed=embed)
 
         player = self.get_player(ctx)
@@ -194,10 +194,10 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
             try:
                 s = player.queue._queue[pos-1]
                 del player.queue._queue[pos-1]
-                embed = discord.Embed(title='', description=f'Removed [{s['title']}]({s['url']}) [{s['requester'].mention}]', color=discord.Color.green())
+                embed = discord.Embed(title='', description=f"Removed [{s['title']}]({s['url']}) [{s['requester'].mention}]", color=discord.Color.green())
                 await ctx.send(embed=embed)
             except:
-                embed = discord.Embed(title='', description=f'Could not find a track for '{pos}'', color=discord.Color.green())
+                embed = discord.Embed(title='', description=f"Could not find a track for '{pos}'", color=discord.Color.green())
                 await ctx.send(embed=embed)
     
     @commands.command(name='clear', aliases=aliases['clear'], description='Clears entire queue')
@@ -207,7 +207,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
-            embed = discord.Embed(title='', description='I'm not connected to a voice channel', color=discord.Color.green())
+            embed = discord.Embed(title='', description="I'm not connected to a voice channel", color=discord.Color.green())
             return await ctx.send(embed=embed)
 
         player = self.get_player(ctx)
@@ -220,12 +220,12 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
-            embed = discord.Embed(title='', description='I'm not connected to a voice channel', color=discord.Color.green())
+            embed = discord.Embed(title='', description="I'm not connected to a voice channel", color=discord.Color.green())
             return await ctx.send(embed=embed)
 
         player = self.get_player(ctx)
         if player.queue.empty():
-            embed = discord.Embed(title='', description='queue is empty', color=discord.Color.green())
+            embed = discord.Embed(title='', description='**Queue is empty**', color=discord.Color.green())
             return await ctx.send(embed=embed)
 
         seconds = vc.source.duration % (24 * 3600) 
@@ -240,20 +240,20 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
 
         # Grabs the songs in the queue...
         upcoming = list(itertools.islice(player.queue._queue, 0, int(len(player.queue._queue))))
-        fmt = '\n'.join(f'`{(upcoming.index(_)) + 1}.` [{_['title']}]({_['url']}) | ` {duration} Requested by: {_['requester']}`\n' for _ in upcoming)
+        fmt = '\n'.join(f"`{(upcoming.index(_)) + 1}.` [{_['title']}]({_['url']}) | ` {duration} Requested by: {_['requester']}`\n" for _ in upcoming)
         fmt = f'\n__Now Playing__:\n[{vc.source.title}]({vc.source.url}) | ` {duration} Requested by: {vc.source.requester}`\n\n__Up Next:__\n' + fmt + f'\n**{len(upcoming)} songs in queue**'
         embed = discord.Embed(title=f'Queue for {ctx.guild.name}', description=fmt, color=discord.Color.green())
         embed.set_footer(text=f'{ctx.author.display_name}')
 
         await ctx.send(embed=embed)
 
-    @commands.command(name='now playing', aliases=aliases['now playing'], description='shows the current playing song')
+    @commands.command(name='now playing', aliases=aliases['now playing'], description='Shows the current playing song')
     async def now_playing_(self, ctx):
         '''Display information about the currently playing song.'''
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
-            embed = discord.Embed(title='', description='I'm not connected to a voice channel', color=discord.Color.green())
+            embed = discord.Embed(title='', description="I'm not connected to a voice channel", color=discord.Color.green())
             return await ctx.send(embed=embed)
 
         player = self.get_player(ctx)
@@ -275,7 +275,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         embed.set_author(icon_url=self.bot.user.avatar_url, name=f'Now Playing 🎶')
         await ctx.send(embed=embed)
 
-    @commands.command(name='volume', aliases=aliases['volume'], description='changes Kermit's volume')
+    @commands.command(name='volume', aliases=aliases['volume'], description="Changes music player's volume")
     async def change_volume(self, ctx, *, vol: float=None):
         '''Change the player volume.
         Parameters
@@ -286,7 +286,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
-            embed = discord.Embed(title='', description='I am not currently connected to voice', color=discord.Color.green())
+            embed = discord.Embed(title='', description="I'm not currently connected to voice", color=discord.Color.green())
             return await ctx.send(embed=embed)
         
         if not vol:
@@ -315,7 +315,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
-            embed = discord.Embed(title='', description='I'm not connected to a voice channel', color=discord.Color.green())
+            embed = discord.Embed(title='', description="I'm not connected to a voice channel", color=discord.Color.green())
             return await ctx.send(embed=embed)
 
         if (random.randint(0, 1) == 0):
