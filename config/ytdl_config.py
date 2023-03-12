@@ -1,5 +1,5 @@
 format_options = {
-    'outtmpl': f'music/%(title)s.%(ext)s',
+    'outtmpl': f'music/%(title)s_%(alt_title)s.%(ext)s',
     'format': 'bestaudio/best',
     'restrictfilenames': True,
     'noplaylist': True,
