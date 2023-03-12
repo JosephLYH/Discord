@@ -5,7 +5,5 @@
 /.vscode
 /music
 
-ffmpeg.exe
-
 url.txt
 test.py
