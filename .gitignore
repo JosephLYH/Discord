@@ -1,7 +1,8 @@
-/.vscode
-/__pycache__/
+/__pycache__
 */__pycache__
-/config/conf.py
+
+.env
+/.vscode
 /music
 
 ffmpeg.exe
