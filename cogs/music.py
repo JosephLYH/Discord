@@ -11,6 +11,20 @@ import traceback
 import discord
 from discord.ext import commands
 
+aliases = {
+    'join': ['connect', 'j'],
+    'play': ['p'],
+    'pause': ['p-'],
+    'resume': ['r'],
+    'skip': ['s'],
+    'remove': ['rem', 'rm'],
+    'clear': ['clr', 'cl', 'c'],
+    'queue': ['playlist', 'list', 'que', 'q'],
+    'now playing': ['song', 'current', 'currentsong', 'playing', 'np'],
+    'volume': ['vol', 'v'],
+    'leave': ['disconnect', 'stop', 'bye', 'dc', 'l'],
+}
+
 class VoiceConnectionError(commands.CommandError):
     """Custom Exception class for connection errors."""
 
@@ -66,7 +80,7 @@ class MusicCog(commands.Cog, name='**Only noobs need tutorial, do you even dark 
 
         return player
 
-    @commands.command(name='join', aliases=['j', 'connect'], description="connects to voice")
+    @commands.command(name='join', alias=aliases['join'], description="connects to voice")
     async def connect_(self, ctx, *, channel: discord.VoiceChannel=None):
         """Connect to voice.
         Parameters
@@ -105,7 +119,7 @@ class MusicCog(commands.Cog, name='**Only noobs need tutorial, do you even dark 
         if config.be_funny:
             await ctx.send('Time to ligma balls')
 
-    @commands.command(name='play', aliases=['p'], description='Search and play a music')
+    @commands.command(name='play', alias=aliases['play'], description='Search and play a music')
     async def play_(self, ctx, *args):
         search = ' '.join(args)
         vc = ctx.voice_client
@@ -119,7 +133,7 @@ class MusicCog(commands.Cog, name='**Only noobs need tutorial, do you even dark 
 
         await player.queue.put(source)
 
-    @commands.command(name='pause', alias=['p-'],description="Pauses music")
+    @commands.command(name='pause', aliases=aliases['pause'],description="Pauses music")
     async def pause_(self, ctx):
         """Pause the currently playing song."""
         vc = ctx.voice_client
@@ -133,7 +147,7 @@ class MusicCog(commands.Cog, name='**Only noobs need tutorial, do you even dark 
         vc.pause()
         await ctx.send("Paused ⏸️")
 
-    @commands.command(name='resume', alias=['r'], description="Resumes music")
+    @commands.command(name='resume', alias=aliases['resume'], description="Resumes music")
     async def resume_(self, ctx):
         """Resume the currently paused song."""
         vc = ctx.voice_client
@@ -147,7 +161,7 @@ class MusicCog(commands.Cog, name='**Only noobs need tutorial, do you even dark 
         vc.resume()
         await ctx.send("Resuming ⏯️")
 
-    @commands.command(name='skip', alias=['s'], description="Skips to next song in queue")
+    @commands.command(name='skip', alias=aliases['skip'], description="Skips to next song in queue")
     async def skip_(self, ctx):
         """Skip the song."""
         vc = ctx.voice_client
@@ -163,7 +177,7 @@ class MusicCog(commands.Cog, name='**Only noobs need tutorial, do you even dark 
 
         vc.stop()
     
-    @commands.command(name='remove', aliases=['rm', 'rem'], description="Removes specified song from queue")
+    @commands.command(name='remove', aliases=aliases['remove'], description="Removes specified song from queue")
     async def remove_(self, ctx, pos : int=None):
         """Removes specified song from queue"""
 
@@ -186,7 +200,7 @@ class MusicCog(commands.Cog, name='**Only noobs need tutorial, do you even dark 
                 embed = discord.Embed(title="", description=f'Could not find a track for "{pos}"', color=discord.Color.green())
                 await ctx.send(embed=embed)
     
-    @commands.command(name='clear', aliases=['c', 'cl', 'cr', 'clr'], description="Clears entire queue")
+    @commands.command(name='clear', aliases=aliases['clear'], description="Clears entire queue")
     async def clear_(self, ctx):
         """Deletes entire queue of upcoming songs."""
 
@@ -200,7 +214,7 @@ class MusicCog(commands.Cog, name='**Only noobs need tutorial, do you even dark 
         player.queue._queue.clear()
         await ctx.send('💣 **Cleared**')
 
-    @commands.command(name='queue', aliases=['q', 'playlist', 'que', 'list'], description="Shows the queue")
+    @commands.command(name='queue', aliases=aliases['queue'], description="Shows the queue")
     async def queue_info(self, ctx: commands):
         """Retrieve a basic queue of upcoming songs."""
         vc = ctx.voice_client
@@ -233,7 +247,7 @@ class MusicCog(commands.Cog, name='**Only noobs need tutorial, do you even dark 
 
         await ctx.send(embed=embed)
 
-    @commands.command(name='np', aliases=['song', 'current', 'currentsong', 'playing'], description="shows the current playing song")
+    @commands.command(name='now playing', aliases=aliases['now playing'], description="shows the current playing song")
     async def now_playing_(self, ctx):
         """Display information about the currently playing song."""
         vc = ctx.voice_client
@@ -261,7 +275,7 @@ class MusicCog(commands.Cog, name='**Only noobs need tutorial, do you even dark 
         embed.set_author(icon_url=self.bot.user.avatar_url, name=f"Now Playing 🎶")
         await ctx.send(embed=embed)
 
-    @commands.command(name='volume', aliases=['vol', 'v'], description="changes Kermit's volume")
+    @commands.command(name='volume', aliases=aliases['volume'], description="changes Kermit's volume")
     async def change_volume(self, ctx, *, vol: float=None):
         """Change the player volume.
         Parameters
@@ -292,7 +306,7 @@ class MusicCog(commands.Cog, name='**Only noobs need tutorial, do you even dark 
         embed = discord.Embed(title="", description=f'**`{ctx.author}`** set the volume to **{vol}%**', color=discord.Color.green())
         await ctx.send(embed=embed)
 
-    @commands.command(name='leave', aliases=["stop", "dc", "disconnect", "bye"], description="stops music and disconnects from voice")
+    @commands.command(name='leave', aliases=aliases['leave'], description="stops music and disconnects from voice")
     async def leave_(self, ctx):
         """Stop the currently playing song and destroy the player.
         !Warning!
@@ -310,7 +324,6 @@ class MusicCog(commands.Cog, name='**Only noobs need tutorial, do you even dark 
         await ctx.send('Disconnected')        
         if config.be_funny:
             await ctx.send('Bye 9 bye')
-
 
         await self.cleanup(ctx.guild)
 
