@@ -80,7 +80,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
 
         return player
 
-    @commands.command(name='join', alias=aliases['join'], description="connects to voice")
+    @commands.command(name='join', aliases=aliases['join'], description="connects to voice")
     async def connect_(self, ctx, *, channel: discord.VoiceChannel=None):
         """Connect to voice.
         Parameters
@@ -119,7 +119,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         if config.be_funny:
             await ctx.send('Time to ligma balls')
 
-    @commands.command(name='play', alias=aliases['play'], description='Search and play a music')
+    @commands.command(name='play', aliases=aliases['play'], description='Search and play a music')
     async def play_(self, ctx, *args):
         search = ' '.join(args)
         vc = ctx.voice_client
@@ -147,7 +147,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         vc.pause()
         await ctx.send("Paused ⏸️")
 
-    @commands.command(name='resume', alias=aliases['resume'], description="Resumes music")
+    @commands.command(name='resume', aliases=aliases['resume'], description="Resumes music")
     async def resume_(self, ctx):
         """Resume the currently paused song."""
         vc = ctx.voice_client
@@ -161,7 +161,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         vc.resume()
         await ctx.send("Resuming ⏯️")
 
-    @commands.command(name='skip', alias=aliases['skip'], description="Skips to next song in queue")
+    @commands.command(name='skip', aliases=aliases['skip'], description="Skips to next song in queue")
     async def skip_(self, ctx):
         """Skip the song."""
         vc = ctx.voice_client
