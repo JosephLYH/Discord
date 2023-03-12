@@ -31,7 +31,7 @@ class VoiceConnectionError(commands.CommandError):
 class InvalidVoiceChannel(VoiceConnectionError):
     """Exception for cases of invalid Voice Channels."""
 
-class MusicCog(commands.Cog, name='**Only noobs need tutorial, do you even dark souls**' if config.be_funny else 'Music Player'):
+class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark souls' if config.be_funny else 'Music Player'):
     __slots__ = ('bot', 'players')
 
     def __init__(self, bot):
