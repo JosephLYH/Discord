@@ -1,1 +1,2 @@
-COMMAND_PREFIX='//'
+command_prefix='//'
+be_funny=True

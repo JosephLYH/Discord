@@ -2,7 +2,9 @@
 /__pycache__/
 */__pycache__
 /config/conf.py
+/music
 
-/ffmpeg
+ffmpeg.exe
 
 url.txt
+test.py
