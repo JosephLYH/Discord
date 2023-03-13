@@ -1,15 +1,15 @@
-from lib.players import MusicPlayer
-from lib.ytdl import YTDLSource
-from config import config
-
-import random
 import asyncio
 import itertools
+import random
 import sys
 import traceback
 
 import discord
 from discord.ext import commands
+
+from config import config
+from lib.players import MusicPlayer
+from lib.ytdl import YTDLSource
 
 aliases = {
     'join': ['connect', 'j'],

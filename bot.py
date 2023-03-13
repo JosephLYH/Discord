@@ -1,12 +1,11 @@
-# local library
-from config import config
-
-# library
-import os
-from dotenv import load_dotenv
 import asyncio
+import os
+
 import discord
 from discord.ext import commands
+from dotenv import load_dotenv
+
+from config import config
 
 load_dotenv()
 

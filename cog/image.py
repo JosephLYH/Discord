@@ -1,9 +1,10 @@
-from config import config
-
-import random
 import os
+import random
+
 import discord
 from discord.ext import commands
+
+from config import config
 
 aliases = {
     'image': ['img'],

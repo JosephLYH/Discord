@@ -1,9 +1,10 @@
-from config import ytdl_config
-
-import os
 import asyncio
+import os
+
 import discord
 import youtube_dl
+
+from config import ytdl_config
 
 youtube_dl.utils.bug_reports_message = lambda: ''
 

@@ -1,7 +1,8 @@
 import asyncio
-from async_timeout import timeout
 
 import discord
+from async_timeout import timeout
+
 
 class MusicPlayer:
     __slots__ = ('bot', 'guild', 'channel', 'cog', 'queue', 'next', 'current', 'np', 'volume')

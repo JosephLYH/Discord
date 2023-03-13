@@ -1,16 +1,16 @@
-# local library
-from config import config
-from lib.ytdl import YTDLSource
-# from lib.player import MusicPlayer
-
-# library
 import os
 import random
 
-# api library
 import discord
 from discord.ext import commands
 from googleapiclient.discovery import build
+
+from config import config
+from lib.ytdl import YTDLSource
+
+# from lib.player import MusicPlayer
+
+
 
 # global variables
 player = {}
