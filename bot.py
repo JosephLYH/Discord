@@ -24,7 +24,8 @@ async def on_ready():
 
 # main function
 async def main():
-    await bot.load_extension('cogs.music')
+    for cog in os.listdir('cog'):
+        await bot.load_extension(f'cog.{cog}')
 
     async with bot:
         await bot.start(os.getenv('TOKEN'))
