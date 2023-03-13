@@ -14,7 +14,7 @@ class ImageCog(commands.Cog, name='Image Generator'):
     @commands.command('image', aliases=aliases['image'], description='Generates image')
     async def connect_(self, ctx, *args):
         arg = ' '.join(args)
-        img_dir = 'img'
+        img_dir = config.img_dir
 
         img_files = os.listdir(os.path.join(img_dir, arg))
         img_file = random.choice(img_files)

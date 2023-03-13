@@ -1,11 +1,12 @@
 import asyncio
+import random
 
 import discord
 from async_timeout import timeout
 
 
 class MusicPlayer:
-    __slots__ = ('bot', 'guild', 'channel', 'cog', 'queue', 'next', 'current', 'np', 'volume')
+    __slots__ = ('bot', 'guild', 'channel', 'cog', 'queue', 'next', 'current', 'np', 'volume', 'loop', 'shuffle')
 
     def __init__(self, ctx):
         self.bot = ctx.bot
@@ -19,6 +20,8 @@ class MusicPlayer:
         self.current = None
         self.np = None
         self.volume = .5
+        self.loop = False
+        self.shuffle = False
 
         ctx.bot.loop.create_task(self.player_loop())
 
@@ -31,6 +34,14 @@ class MusicPlayer:
                 try:
                     async with timeout(60*5):
                         source = await self.queue.get()
+                        if self.shuffle:
+                            qsize = self.queue.qsize()
+                            for i in range(random.randint(0, max(0, qsize-1))):
+                                temp = await self.queue.get()
+                                await self.queue.put(temp)
+                        if self.loop:
+                            copy = await source.create_copy(source.ctx, source.data, source.filename)
+                            await self.queue.put(copy)
                 except asyncio.TimeoutError:
                     return self.destroy(self.guild)
 

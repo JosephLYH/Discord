@@ -3,6 +3,7 @@ import itertools
 import random
 import sys
 import traceback
+from collections import defaultdict
 
 import discord
 from discord.ext import commands
@@ -22,7 +23,9 @@ aliases = {
     'queue': ['playlist', 'list', 'que', 'q'],
     'now playing': ['song', 'current', 'currentsong', 'playing', 'np'],
     'volume': ['vol', 'v'],
-    'leave': ['disconnect', 'stop', 'bye', 'dc', 'l'],
+    'leave': ['disconnect', 'stop', 'bye', 'dc', 'lv', 'l'],
+    'loop': ['lp'],
+    'shuffle': ['sf'],
 }
 
 class VoiceConnectionError(commands.CommandError):
@@ -47,6 +50,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
 
         try:
             del self.players[guild.id]
+            del self.loop[guild.id]
         except KeyError:
             pass
 
@@ -115,7 +119,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         if (random.randint(0, 1) == 0):
             await ctx.message.add_reaction('👍')
         
-        await ctx.send(f'**Joined `{channel}`**')
+        await ctx.send(f'**Joined** 🎶 `{channel}`')
         if config.be_funny:
             await ctx.send('Time to ligma balls')
 
@@ -145,7 +149,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
             return
 
         vc.pause()
-        await ctx.send('Paused ⏸️')
+        await ctx.send('**Paused** ⏸️')
 
     @commands.command(name='resume', aliases=aliases['resume'], description='Resumes music')
     async def resume_(self, ctx):
@@ -159,7 +163,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
             return
 
         vc.resume()
-        await ctx.send('Resuming ⏯️')
+        await ctx.send('**Resuming** ⏯️')
 
     @commands.command(name='skip', aliases=aliases['skip'], description='Skips to next song in queue')
     async def skip_(self, ctx):
@@ -176,6 +180,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
             return
 
         vc.stop()
+        await ctx.send('**Stopped** ⏹')
     
     @commands.command(name='remove', aliases=aliases['remove'], description='Removes specified song from queue')
     async def remove_(self, ctx, pos : int=None):
@@ -212,7 +217,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
 
         player = self.get_player(ctx)
         player.queue._queue.clear()
-        await ctx.send('💣 **Cleared**')
+        await ctx.send('**Cleared** 💣')
 
     @commands.command(name='queue', aliases=aliases['queue'], description='Shows the queue')
     async def queue_info(self, ctx: commands):
@@ -306,7 +311,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         embed = discord.Embed(title='', description=f'**`{ctx.author}`** set the volume to **{vol}%**', color=discord.Color.green())
         await ctx.send(embed=embed)
 
-    @commands.command(name='leave', aliases=aliases['leave'], description='stops music and disconnects from voice')
+    @commands.command(name='leave', aliases=aliases['leave'], description='Stops music and disconnects from voice')
     async def leave_(self, ctx):
         '''Stop the currently playing song and destroy the player.
         !Warning!
@@ -326,6 +331,42 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
             await ctx.send('Bye 9 bye')
 
         await self.cleanup(ctx.guild)
+
+    @commands.command(name='loop', aliases=aliases['loop'], description='Trigger loop')
+    async def loop_(self, ctx):
+        '''Set loop
+        '''
+        vc = ctx.voice_client
+        
+        if not vc:
+            await ctx.invoke(self.connect_)
+
+        player = self.get_player(ctx)
+        player.loop = not player.loop
+        
+        if not player.loop:
+            await ctx.send('**Stopped looping** ↩') 
+            return
+
+        await ctx.send('**Looping** 🔁')
+
+    @commands.command(name='shuffle', aliases=aliases['shuffle'], description='Trigger shuffle')
+    async def shuffle_(self, ctx):
+        '''Set shuffle
+        '''
+        vc = ctx.voice_client
+        
+        if not vc:
+            await ctx.invoke(self.connect_)
+
+        player = self.get_player(ctx)
+        player.shuffle = not player.shuffle
+        
+        if not player.shuffle:
+            await ctx.send('**Stopped shuffling** ➡') 
+            return
+
+        await ctx.send('**Shuffling** 🔀')
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(MusicCog(bot))

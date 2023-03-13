@@ -24,7 +24,8 @@ async def on_ready():
 # main function
 async def main():
     for cog in os.listdir('cog'):
-        await bot.load_extension(f'cog.{cog}')
+        if cog.endswith('.py'):
+            await bot.load_extension(f'cog.{os.path.splitext(cog)[0]}')
 
     async with bot:
         await bot.start(os.getenv('TOKEN'))
