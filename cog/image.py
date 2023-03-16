@@ -11,7 +11,7 @@ aliases = {
 }
 
 class ImageCog(commands.Cog, name='Image Generator'):
-    @commands.command('image', aliases=aliases['image'], description='Generates image')
+    @commands.command('image', aliases=aliases['image'], help='Generates image')
     async def connect_(self, ctx, *args):
         arg = ' '.join(args)
         img_dir = config.img_dir

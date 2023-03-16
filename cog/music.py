@@ -34,7 +34,7 @@ class VoiceConnectionError(commands.CommandError):
 class InvalidVoiceChannel(VoiceConnectionError):
     '''Exception for cases of invalid Voice Channels.'''
 
-class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark souls' if config.be_funny else 'Music Player'):
+class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'Only noobs need tutorial, do you even dark souls'):
     __slots__ = ('bot', 'players')
 
     def __init__(self, bot):
@@ -50,11 +50,10 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
 
         try:
             del self.players[guild.id]
-            del self.loop[guild.id]
         except KeyError:
             pass
 
-    async def __local_check(self, ctx):
+    async def __local_check(self, ctx: commands.Context):
         '''A local check which applies to all commands in this cog.'''
         if not ctx.guild:
             raise commands.NoPrivateMessage
@@ -74,7 +73,7 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
-    def get_player(self, ctx):
+    def get_player(self, ctx: commands.Context):
         '''Retrieve the guild player, or generate one.'''
         try:
             player = self.players[ctx.guild.id]
@@ -84,16 +83,8 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
 
         return player
 
-    @commands.command(name='join', aliases=aliases['join'], description='Connects to voice')
-    async def connect_(self, ctx, *, channel: discord.VoiceChannel=None):
-        '''Connect to voice.
-        Parameters
-        ------------
-        channel: discord.VoiceChannel [Optional]
-            The channel to connect to. If a channel is not specified, an attempt to join the voice channel you are in
-            will be made.
-        This command also handles moving the bot to different channels.
-        '''
+    @commands.command(name='join', aliases=aliases['join'], help='Connects to voice' if not config.be_funny else 'Joins to disrupt the voice chat')
+    async def connect_(self, ctx: commands.Context, *, channel: discord.VoiceChannel=None):
         if not channel:
             try:
                 channel = ctx.author.voice.channel
@@ -121,10 +112,11 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         
         await ctx.send(f'**Joined** 🎶 `{channel}`')
         if config.be_funny:
-            await ctx.send('Time to ligma balls')
+            await ctx.send('**Time to d a n c i n**')
+            await ctx.invoke(self.play_, 'https://www.youtube.com/watch?v=gu3KzCWoons')
 
-    @commands.command(name='play', aliases=aliases['play'], description='Search and play a music')
-    async def play_(self, ctx, *args):
+    @commands.command(name='play', aliases=aliases['play'], help='Searchs and plays music' if not config.be_funny else 'Pretty self explanatory, do you use brain')
+    async def play_(self, ctx: commands.Context, *args):
         search = ' '.join(args)
         vc = ctx.voice_client
 
@@ -137,9 +129,8 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
 
         await player.queue.put(source)
 
-    @commands.command(name='pause', aliases=aliases['pause'],description='Pauses music')
-    async def pause_(self, ctx):
-        '''Pause the currently playing song.'''
+    @commands.command(name='pause', aliases=aliases['pause'], help='Pauses the playing music')
+    async def pause_(self, ctx: commands.Context):
         vc = ctx.voice_client
 
         if not vc or not vc.is_playing():
@@ -151,9 +142,8 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         vc.pause()
         await ctx.send('**Paused** ⏸️')
 
-    @commands.command(name='resume', aliases=aliases['resume'], description='Resumes music')
-    async def resume_(self, ctx):
-        '''Resume the currently paused song.'''
+    @commands.command(name='resume', aliases=aliases['resume'], help='Resumes the paused music')
+    async def resume_(self, ctx: commands.Context):
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
@@ -165,9 +155,8 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         vc.resume()
         await ctx.send('**Resuming** ⏯️')
 
-    @commands.command(name='skip', aliases=aliases['skip'], description='Skips to next song in queue')
-    async def skip_(self, ctx):
-        '''Skip the song.'''
+    @commands.command(name='skip', aliases=aliases['skip'], help='Skips the current music')
+    async def skip_(self, ctx: commands.Context):
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
@@ -182,10 +171,8 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         vc.stop()
         await ctx.send('**Stopped** ⏹')
     
-    @commands.command(name='remove', aliases=aliases['remove'], description='Removes specified song from queue')
-    async def remove_(self, ctx, pos : int=None):
-        '''Removes specified song from queue'''
-
+    @commands.command(name='remove', aliases=aliases['remove'], help='Removes specified song from queue by index')
+    async def remove_(self, ctx: commands.Context, pos : int=None):
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
@@ -199,16 +186,14 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
             try:
                 s = player.queue._queue[pos-1]
                 del player.queue._queue[pos-1]
-                embed = discord.Embed(title='', description=f"Removed [{s['title']}]({s['url']}) [{s['requester'].mention}]", color=discord.Color.green())
+                embed = discord.Embed(title='', description=f"**Removed** [{s['title']}]({s['url']}) [{s['requester'].mention}]", color=discord.Color.green())
                 await ctx.send(embed=embed)
             except:
                 embed = discord.Embed(title='', description=f"Could not find a track for '{pos}'", color=discord.Color.green())
                 await ctx.send(embed=embed)
     
-    @commands.command(name='clear', aliases=aliases['clear'], description='Clears entire queue')
-    async def clear_(self, ctx):
-        '''Deletes entire queue of upcoming songs.'''
-
+    @commands.command(name='clear', aliases=aliases['clear'], help='Clears entire queue')
+    async def clear_(self, ctx: commands.Context):
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
@@ -219,9 +204,8 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         player.queue._queue.clear()
         await ctx.send('**Cleared** 💣')
 
-    @commands.command(name='queue', aliases=aliases['queue'], description='Shows the queue')
+    @commands.command(name='queue', aliases=aliases['queue'], help='Shows the queue')
     async def queue_info(self, ctx: commands):
-        '''Retrieve a basic queue of upcoming songs.'''
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
@@ -252,9 +236,8 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
 
         await ctx.send(embed=embed)
 
-    @commands.command(name='now playing', aliases=aliases['now playing'], description='Shows the current playing song')
-    async def now_playing_(self, ctx):
-        '''Display information about the currently playing song.'''
+    @commands.command(name='now playing', aliases=aliases['now playing'], help='Displays information about the current song')
+    async def now_playing_(self, ctx: commands.Context):
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
@@ -276,18 +259,12 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         else:
             duration = '%02dm %02ds' % (minutes, seconds)
 
-        embed = discord.Embed(title='', description=f'[{vc.source.title}]({vc.source.web_url}) [{vc.source.requester.mention}] | `{duration}`', color=discord.Color.green())
-        embed.set_author(icon_url=self.bot.user.avatar_url, name=f'Now Playing 🎶')
+        embed = discord.Embed(title='', description=f'[{vc.source.title}]({vc.source.url}) [{vc.source.requester.mention}] | `{duration}`', color=discord.Color.green())
+        embed.set_author(name=f'Now Playing 🎶')
         await ctx.send(embed=embed)
 
-    @commands.command(name='volume', aliases=aliases['volume'], description="Changes music player's volume")
-    async def change_volume(self, ctx, *, vol: float=None):
-        '''Change the player volume.
-        Parameters
-        ------------
-        volume: float or int [Required]
-            The volume to set the player to in percentage. This must be between 1 and 100.
-        '''
+    @commands.command(name='volume', aliases=aliases['volume'], help="Changes the music player volume")
+    async def change_volume(self, ctx: commands.Context, *, vol: float=None):
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
@@ -311,12 +288,8 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         embed = discord.Embed(title='', description=f'**`{ctx.author}`** set the volume to **{vol}%**', color=discord.Color.green())
         await ctx.send(embed=embed)
 
-    @commands.command(name='leave', aliases=aliases['leave'], description='Stops music and disconnects from voice')
-    async def leave_(self, ctx):
-        '''Stop the currently playing song and destroy the player.
-        !Warning!
-            This will destroy the player assigned to your guild, also deleting any queued songs and settings.
-        '''
+    @commands.command(name='leave', aliases=aliases['leave'], help='Stops music and disconnects from voice')
+    async def leave_(self, ctx: commands.Context):
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
@@ -326,16 +299,14 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
         if (random.randint(0, 1) == 0):
             await ctx.message.add_reaction('👋')
         
-        await ctx.send('Disconnected')        
+        await ctx.send('**Disconnected**')        
         if config.be_funny:
-            await ctx.send('Bye 9 bye')
+            await ctx.send('**Bye 9 bye**')
 
         await self.cleanup(ctx.guild)
 
-    @commands.command(name='loop', aliases=aliases['loop'], description='Trigger loop')
-    async def loop_(self, ctx):
-        '''Set loop
-        '''
+    @commands.command(name='loop', aliases=aliases['loop'], help='Triggers loop')
+    async def loop_(self, ctx: commands.Context):
         vc = ctx.voice_client
         
         if not vc:
@@ -350,10 +321,8 @@ class MusicCog(commands.Cog, name='Only noobs need tutorial, do you even dark so
 
         await ctx.send('**Looping** 🔁')
 
-    @commands.command(name='shuffle', aliases=aliases['shuffle'], description='Trigger shuffle')
-    async def shuffle_(self, ctx):
-        '''Set shuffle
-        '''
+    @commands.command(name='shuffle', aliases=aliases['shuffle'], help='Triggers shuffle')
+    async def shuffle_(self, ctx: commands.Context):
         vc = ctx.voice_client
         
         if not vc:
