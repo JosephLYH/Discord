@@ -15,7 +15,7 @@ from lib.ytdl import YTDLSource
 aliases = {
     'join': ['connect', 'j'],
     'play': ['p'],
-    'pause': ['p-'],
+    'pause': ['p-', 'stop'],
     'resume': ['r'],
     'skip': ['s'],
     'remove': ['rem', 'rm'],
@@ -23,7 +23,7 @@ aliases = {
     'queue': ['playlist', 'list', 'que', 'q'],
     'now playing': ['song', 'current', 'currentsong', 'playing', 'np'],
     'volume': ['vol', 'v'],
-    'leave': ['disconnect', 'stop', 'bye', 'dc', 'lv', 'l'],
+    'leave': ['disconnect', 'bye', 'dc', 'lv', 'l'],
     'loop': ['lp'],
     'shuffle': ['sf'],
 }
@@ -112,12 +112,20 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
         
         await ctx.send(f'**Joined** 🎶 `{channel}`')
         if config.be_funny:
-            await ctx.send('**Time to d a n c i n**')
-            await ctx.invoke(self.play_, 'https://www.youtube.com/watch?v=gu3KzCWoons')
+            await ctx.send('**Time to d a n c i n first** ╰(*°▽°*)╯')
+            await ctx.invoke(self.play_, 'https://www.youtube.com/watch?v=Cjp6RVrOOW0')
 
     @commands.command(name='play', aliases=aliases['play'], help='Searchs and plays music' if not config.be_funny else 'Pretty self explanatory, do you use brain')
     async def play_(self, ctx: commands.Context, *args):
         search = ' '.join(args)
+        if not search:
+            if config.be_funny:
+                await ctx.send(f'Enter a music you dumbass')
+                return
+        
+            await ctx.send('Enter a music')
+            return
+
         vc = ctx.voice_client
 
         if not vc:
@@ -169,7 +177,7 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
             return
 
         vc.stop()
-        await ctx.send('**Stopped** ⏹')
+        await ctx.send('**Skipped** ⏭')
     
     @commands.command(name='remove', aliases=aliases['remove'], help='Removes specified song from queue by index')
     async def remove_(self, ctx: commands.Context, pos : int=None):
