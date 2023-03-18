@@ -39,9 +39,8 @@ class MusicPlayer:
                             for i in range(random.randint(0, max(0, qsize-1))):
                                 temp = await self.queue.get()
                                 await self.queue.put(temp)
-                        if self.loop:
-                            copy = await source.create_copy(source.ctx, source.data, source.filename)
-                            await self.queue.put(copy)
+
+                        copy = await source.create_copy(source.ctx, source.data, source.filename)
                 except asyncio.TimeoutError:
                     return self.destroy(self.guild)
 
@@ -61,6 +60,9 @@ class MusicPlayer:
                 # Make sure the FFmpeg process is cleaned up.
                 source.cleanup()
                 self.current = None
+
+                if self.loop:
+                    await self.queue.put(copy)
         
     def destroy(self, guild):
         return self.bot.loop.create_task(self.cog.cleanup(guild))
