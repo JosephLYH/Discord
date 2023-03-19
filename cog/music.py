@@ -9,6 +9,7 @@ import discord
 from discord.ext import commands
 
 from config import config
+from lib.common import duration2time
 from lib.players import MusicPlayer
 from lib.ytdl import YTDLSource
 
@@ -221,26 +222,16 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
             return await ctx.send(embed=embed)
 
         player = self.get_player(ctx)
+        
+        fmt = f'\n__Now Playing__:\n[{vc.source.title}]({vc.source.url}) | `{duration2time(vc.source.duration)} Requested by: {vc.source.requester}`\n\n__Up Next:__\n'
         if player.queue.empty():
-            embed = discord.Embed(title='', description='**Queue is empty**', color=discord.Color.green())
-            return await ctx.send(embed=embed)
-
-        seconds = vc.source.duration % (24 * 3600) 
-        hour = seconds // 3600
-        seconds %= 3600
-        minutes = seconds // 60
-        seconds %= 60
-        if hour > 0:
-            duration = '%dh %02dm %02ds' % (hour, minutes, seconds)
+            fmt += '**Queue is empty**\n\n'
         else:
-            duration = '%02dm %02ds' % (minutes, seconds)
+            upcoming = list(itertools.islice(player.queue._queue, 0, int(len(player.queue._queue))))
+            fmt += '\n'.join(f"`{(upcoming.index(_)) + 1}.` [{_['title']}]({_['url']}) | ` {duration2time(_['duration'])} Requested by: {_['requester']}`\n" for _ in upcoming)
+            fmt += f'\n**{len(upcoming)} songs in queue**'
 
-        # Grabs the songs in the queue...
-        upcoming = list(itertools.islice(player.queue._queue, 0, int(len(player.queue._queue))))
-        fmt = '\n'.join(f"`{(upcoming.index(_)) + 1}.` [{_['title']}]({_['url']}) | ` {duration} Requested by: {_['requester']}`\n" for _ in upcoming)
-        fmt = f'\n__Now Playing__:\n[{vc.source.title}]({vc.source.url}) | ` {duration} Requested by: {vc.source.requester}`\n\n__Up Next:__\n' + fmt + f'\n**{len(upcoming)} songs in queue**'
         embed = discord.Embed(title=f'Queue for {ctx.guild.name}', description=fmt, color=discord.Color.green())
-        embed.set_footer(text=f'{ctx.author.display_name}')
 
         await ctx.send(embed=embed)
 
@@ -256,19 +247,9 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
         if not player.current:
             embed = discord.Embed(title='', description='I am currently not playing anything', color=discord.Color.green())
             return await ctx.send(embed=embed)
-        
-        seconds = vc.source.duration % (24 * 3600) 
-        hour = seconds // 3600
-        seconds %= 3600
-        minutes = seconds // 60
-        seconds %= 60
-        if hour > 0:
-            duration = '%dh %02dm %02ds' % (hour, minutes, seconds)
-        else:
-            duration = '%02dm %02ds' % (minutes, seconds)
 
-        embed = discord.Embed(title='', description=f'[{vc.source.title}]({vc.source.url}) [{vc.source.requester.mention}] | `{duration}`', color=discord.Color.green())
-        embed.set_author(name=f'Now Playing 🎶')
+        embed = discord.Embed(title='', description=f'[{vc.source.title}]({vc.source.url}) | `{duration2time(vc.source.duration)} Requested by: {vc.source.requester}`', color=discord.Color.green())
+        embed.set_author(name='Now Playing 🎶')
         await ctx.send(embed=embed)
 
     @commands.command(name='volume', aliases=aliases['volume'], help="Changes the music player volume")
