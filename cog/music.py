@@ -11,7 +11,7 @@ from discord.ext import commands
 from config import config
 from lib.common import duration2time
 from lib.players import MusicPlayer
-from lib.ytdl import YTDLSource
+from lib.ytdlp import YTDLPSource
 
 aliases = {
     'join': ['connect', 'j'],
@@ -134,7 +134,7 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
 
         player = self.get_player(ctx)
 
-        source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop)
+        source = await YTDLPSource.create_source(ctx, search, loop=self.bot.loop)
 
         await player.queue.put(source)
 

@@ -2,15 +2,15 @@ import asyncio
 import os
 
 import discord
-import youtube_dl
+import yt_dlp
 
-from config import ytdl_config
+from config import ytdlp_config
 
-youtube_dl.utils.bug_reports_message = lambda: ''
+yt_dlp.utils.bug_reports_message = lambda: ''
 
-ytdl = youtube_dl.YoutubeDL(ytdl_config.format_options)
+ytdl = yt_dlp.YoutubeDL(ytdlp_config.format_options)
 
-class YTDLSource(discord.PCMVolumeTransformer):
+class YTDLPSource(discord.PCMVolumeTransformer):
     def __init__(self, source, *args, ctx, data, filename):
         super().__init__(source)
         self.filename = filename
