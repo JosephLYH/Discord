@@ -4,6 +4,7 @@
 .env
 /.vscode
 /music
+/img
 
 ffmpeg.exe
 url.txt
