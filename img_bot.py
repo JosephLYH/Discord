@@ -10,7 +10,7 @@ from config import config
 load_dotenv()
 
 bot = commands.Bot(
-    command_prefix=config.command_prefix, 
+    command_prefix=config.img_command_prefix, 
     intents=discord.Intents.all())
 
 # events
@@ -19,15 +19,13 @@ async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
     await bot.change_presence(
         status=discord.Status.online, 
-        activity=discord.Game(name=f'Music, type {config.command_prefix}help'))
+        activity=discord.Game(name=f'Stable diffusion, type {config.command_prefix}help'))
 
 # main function
 async def main():
-    for cog in os.listdir('cog'):
-        if cog.endswith('.py'):
-            await bot.load_extension(f'cog.{os.path.splitext(cog)[0]}')
+    await bot.load_extension('cog.image')
 
     async with bot:
-        await bot.start(os.getenv('TOKEN'))
+        await bot.start(os.getenv('IMG_TOKEN'))
 
 asyncio.run(main())

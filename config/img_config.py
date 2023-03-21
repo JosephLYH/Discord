@@ -41,4 +41,5 @@ valid_options = {
     'cfg_scale': list(np.arange(1, 30.5, 0.5)),
     'height': [512, 768],
     'width': [512, 768],
+    
 }

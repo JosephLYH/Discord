@@ -13,8 +13,8 @@ from PIL import Image
 from config import config, img_config
 
 aliases = {
-    'image': ['img'],
-    'sd_model': ['model'],
+    'image': ['i', 'img'],
+    'sd_model': ['m', 'model'],
     'sd': ['stable_diffusion', 'diffuse'],
     'sd_options': ['so'],
     'sd_print_options': ['spo'],
@@ -43,7 +43,7 @@ class ImageCog(commands.Cog, name='Image Generator' if not config.be_funny else 
         img_file = random.choice(img_files)
         await ctx.send(file=discord.File(os.path.join(img_dir, arg, img_file)))
 
-    @commands.command('sd_model', aliases=aliases['sd_model'], help='Set stable diffusion model, default = chilloutmix')
+    @commands.command('sd_model', aliases=aliases['sd_model'], help='Set stable diffusion model')
     async def sd_model_(self, ctx, model=None):
         payload = await self.get_payload(ctx)
 
@@ -56,7 +56,7 @@ class ImageCog(commands.Cog, name='Image Generator' if not config.be_funny else 
         embed = discord.Embed(title='', description=f'Successfully loaded {payload["sd_model_checkpoint"]}', color=discord.Color.green())
         await ctx.send(embed=embed)
 
-    @commands.command('sd', aliases=aliases['sd'], help='Generates stable diffusion image, enter postive and negative prompt, e.g. \sd "corgi" "bad anatomy, watermark"')
+    @commands.command('sd', aliases=aliases['sd'], help='Generates stable diffusion image, enter pos & neg prompt, e.g. \sd "corgi" "bad anatomy, watermark"')
     async def sd_(self, ctx, pos_prompt, neg_prompt=''):
         sd_path = os.path.join(img_config.img_dir, 'sd')
         os.makedirs(sd_path, exist_ok=True)
@@ -73,7 +73,9 @@ class ImageCog(commands.Cog, name='Image Generator' if not config.be_funny else 
                 return await ctx.send(embed=embed)
 
             response = requests.post(url=f'{img_config.sd_url}/sdapi/v1/txt2img', json=payload)
-
+        
+        del payload['prompt']
+        del payload['negative_prompt']
         if response.status_code != 200:
             embed = discord.Embed(title='', description='Failed to generate image', color=discord.Color.dark_red())
             return await ctx.send(embed=embed)
