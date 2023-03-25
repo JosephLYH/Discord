@@ -86,6 +86,9 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
+        if member.id == self.bot.user.id:
+            return
+        
         if before.channel and before.channel.id in map(lambda x: x.channel.id, self.bot.voice_clients) and len(before.channel.members) == 1:
             await self.cleanup(before.channel.guild)
 
