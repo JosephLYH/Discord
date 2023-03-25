@@ -46,16 +46,17 @@ class MusicPlayer:
             try:
                 async with timeout(60*5):
                     source = await self.queue.get()
-                    
-                    if self.shuffle:
-                        qsize = self.queue.qsize()
-                        for i in range(random.randint(0, max(0, qsize-1))):
-                            temp = await self.queue.get()
-                            await self.queue.put(temp)
-
-                    copy = await source.create_copy(source.ctx, source.data, source.filename)
             except asyncio.TimeoutError:
                 return self.destroy(self.guild)
+            
+                                
+            if self.shuffle:
+                qsize = self.queue.qsize()
+                for i in range(random.randint(0, max(0, qsize-1))):
+                    temp = await self.queue.get()
+                    await self.queue.put(temp)
+
+            copy = await source.create_copy(source.ctx, source.data, source.filename)
 
             source.volume = self.volume
             self.current = source
