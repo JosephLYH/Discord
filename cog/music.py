@@ -8,7 +8,7 @@ from collections import defaultdict
 import discord
 from discord.ext import commands
 
-from config import config
+from config import config, music_config
 from lib.common import duration2time
 from lib.players import MusicPlayer
 from lib.ytdlp import YTDLPSource
@@ -27,6 +27,7 @@ aliases = {
     'leave': ['disconnect', 'bye', 'dc', 'lv', 'l'],
     'loop': ['lp'],
     'shuffle': ['sf'],
+    'random': ['rd'],
 }
 
 class VoiceConnectionError(commands.CommandError):
@@ -121,8 +122,8 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
         
         await ctx.send(f'**Joined** 🎶 `{channel}`')
         if config.be_funny:
-            await ctx.send('**Time to dancin first** ╰(*°▽°*)╯')
-            await ctx.invoke(self.play_, 'https://www.youtube.com/watch?v=Cjp6RVrOOW0')
+            await ctx.send('**Time to play music roulette** ╰(*°▽°*)╯')
+            await ctx.invoke(self.play_, music_config.song_choices[random.choice(list(music_config.song_choices.keys()))])
 
     @commands.command(name='play', aliases=aliases['play'], help='Searchs and plays music' if not config.be_funny else 'Pretty self explanatory, do you use brain')
     async def play_(self, ctx: commands.Context, *args):
@@ -342,6 +343,11 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
             return await ctx.send('**Stopped shuffling** ➡') 
 
         await ctx.send('**Shuffling** 🔀')
+
+    @commands.command(name='random', aliases=aliases['random'], help='Play music roulette')
+    async def random_(self, ctx: commands.Context):
+        await ctx.send('**Random** 🎲')
+        await ctx.invoke(self.play_, music_config.song_choices[random.choice(list(music_config.song_choices.keys()))])
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(MusicCog(bot))
