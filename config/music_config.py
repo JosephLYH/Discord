@@ -1,4 +1,7 @@
 song_choices = {
+    'Never gonna give you up': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', # Mandatory Rick Roll
+    'Coldplay - Viva La Vida (Official Video)': 'https://www.youtube.com/watch?v=dvgZkm1xWPE',
+    'OneRepublic - Counting Stars (Official Music Video)': 'https://www.youtube.com/watch?v=hT_nvWreIhg',
     'Dimash - SOS | 2021': 'https://www.youtube.com/watch?v=AUARjexCTlQ',
     'Aaron Smith - Dancin (KRONO Remix) - Lyrics': 'https://www.youtube.com/watch?v=Cjp6RVrOOW0',
     "Soviet Anthem but it's sung by a loli (kyOresu)": 'https://www.youtube.com/watch?v=VWaQcKiAj_Q',
@@ -6,4 +9,15 @@ song_choices = {
     'Elden Ring Soundtrack OST - The Final Battle': 'https://www.youtube.com/watch?v=sNZj_eZyq2I',
     'The Godness Fall [GODDESS OF VICTORY : NIKKE OST]': 'https://www.youtube.com/watch?v=0t1pYScEXGA',
     'Unicorn': 'https://www.youtube.com/watch?v=LLiUwIFV_cM',
+    'Cyberpunk: Edgerunners | "I Really Want to Stay At Your House" by Rosa Walton': 'https://www.youtube.com/watch?v=KvMY1uzSC1E',
+    'Epic sax guy': 'https://www.youtube.com/watch?v=pHXDMe6QV-U',
+    'Yakuza OST - Baka Mitai': 'https://www.youtube.com/watch?v=g3jCAyPai2Y',
+    'Imagine Dragons x J.I.D - Enemy (from the series Arcane League of Legends)': 'https://www.youtube.com/watch?v=D9G1VOjN_84',
+    'Fighting Gold': 'https://www.youtube.com/watch?v=ub3EI4xw48c',
+    "JoJo's Bizarre Adventure: Golden Wind OST - Giorno's Theme [il vento d'oro]": 'https://www.youtube.com/watch?v=623JGFAYZ3w',
+    'Task Force Neuron - Astral Chain': 'https://www.youtube.com/watch?v=GHEJAuUfTec',
+    'Persona 5: Last Surprise - Jazz Cover || insaneintherainmusic (feat. Adrisaurus, Brandon S & Chris A': 'https://www.youtube.com/watch?v=RdfPMadOyw0',
+    'Gusty Garden Galaxy Medley Jazz Arrangement || insaneintherainmusic': 'https://www.youtube.com/watch?v=QbdLWb4r8YM',
+    'Weight of the World/壊レタ世界ノ歌': 'https://www.youtube.com/watch?v=Dsk3DTdTY3Y',
+    'WE RISE (Full Length) [GODDESS OF VICTORY : NIKKE OST]': 'https://www.youtube.com/watch?v=LKAs-FqqCmo',
 }

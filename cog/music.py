@@ -123,7 +123,7 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
         await ctx.send(f'**Joined** 🎶 `{channel}`')
         if config.be_funny:
             await ctx.send('**Time to play music roulette** ╰(*°▽°*)╯')
-            await ctx.invoke(self.play_, music_config.song_choices[random.choice(list(music_config.song_choices.keys()))])
+            await ctx.invoke(self.random_)
 
     @commands.command(name='play', aliases=aliases['play'], help='Searchs and plays music' if not config.be_funny else 'Pretty self explanatory, do you use brain')
     async def play_(self, ctx: commands.Context, *args):
@@ -344,7 +344,7 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
 
         await ctx.send('**Shuffling** 🔀')
 
-    @commands.command(name='random', aliases=aliases['random'], help='Play music roulette')
+    @commands.command(name='random', aliases=aliases['random'], help='Play random music')
     async def random_(self, ctx: commands.Context):
         await ctx.send('**Random** 🎲')
         await ctx.invoke(self.play_, music_config.song_choices[random.choice(list(music_config.song_choices.keys()))])
