@@ -10,7 +10,7 @@ from config import config
 load_dotenv()
 
 bot = commands.Bot(
-    command_prefix=config.music_command_prefix, 
+    command_prefix=config.music_cmd_prefix, 
     intents=discord.Intents.all())
 
 # events
@@ -19,9 +19,9 @@ async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
     await bot.change_presence(
         status=discord.Status.online, 
-        activity=discord.Game(name=f'Music, type {config.command_prefix}help'))
+        activity=discord.Game(name=f'Music, type {config.music_cmd_prefix}help'))
 
-# main function
+# main function6
 async def main():
     await bot.load_extension('cog.music')
 

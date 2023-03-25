@@ -10,7 +10,7 @@ from config import config
 load_dotenv()
 
 bot = commands.Bot(
-    command_prefix=config.img_command_prefix, 
+    command_prefix=config.img_cmd_prefix, 
     intents=discord.Intents.all())
 
 # events
@@ -19,7 +19,7 @@ async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
     await bot.change_presence(
         status=discord.Status.online, 
-        activity=discord.Game(name=f'Stable diffusion, type {config.command_prefix}help'))
+        activity=discord.Game(name=f'Stable diffusion, type {config.img_cmd_prefix}help'))
 
 # main function
 async def main():

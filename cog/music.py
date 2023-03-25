@@ -38,7 +38,7 @@ class InvalidVoiceChannel(VoiceConnectionError):
 class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'Only noobs need tutorial, do you even dark souls'):
     __slots__ = ('bot', 'players')
 
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         super().__init__()
         self.bot = bot
         self.players = {}
@@ -84,13 +84,18 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
 
         return player
 
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member, before, after):
+        if before.channel and before.channel.id in map(lambda x: x.channel.id, self.bot.voice_clients) and len(before.channel.members) == 1:
+            await self.cleanup(before.channel.guild)
+
     @commands.command(name='join', aliases=aliases['join'], help='Connects to voice' if not config.be_funny else 'Joins to disrupt the voice chat')
     async def connect_(self, ctx: commands.Context, *, channel: discord.VoiceChannel=None):
         if not channel:
             try:
                 channel = ctx.author.voice.channel
             except AttributeError:
-                embed = discord.Embed(title='', description=f'No channel to join. Please call `{config.command_prefix}join` from a voice channel.', color=discord.Color.green())
+                embed = discord.Embed(title='', description=f'No channel to join. Please call `{config.music_cmd_prefix}join` from a voice channel.', color=discord.Color.green())
                 await ctx.send(embed=embed)
                 raise InvalidVoiceChannel('No channel to join. Please either specify a valid channel or join one.')
 
@@ -113,7 +118,7 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
         
         await ctx.send(f'**Joined** 🎶 `{channel}`')
         if config.be_funny:
-            await ctx.send('**Time to d a n c i n first** ╰(*°▽°*)╯')
+            await ctx.send('**Time to dancin first** ╰(*°▽°*)╯')
             await ctx.invoke(self.play_, 'https://www.youtube.com/watch?v=Cjp6RVrOOW0')
 
     @commands.command(name='play', aliases=aliases['play'], help='Searchs and plays music' if not config.be_funny else 'Pretty self explanatory, do you use brain')
@@ -121,11 +126,9 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
         search = ' '.join(args)
         if not search:
             if config.be_funny:
-                await ctx.send(f'Enter a music you dumbass')
-                return
+                return await ctx.send(f'Enter a music you dumbass')
         
-            await ctx.send('Enter a music')
-            return
+            return await ctx.send('Enter a music')
 
         vc = ctx.voice_client
 
@@ -134,8 +137,12 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
 
         player = self.get_player(ctx)
 
+        if player.current:
+            embed = discord.Embed(title='', description=f'Waiting to add to queue', color=discord.Color.green())
+            await ctx.send(embed=embed)            
+            return await player.waiting.put([ctx, search])
+        
         source = await YTDLPSource.create_source(ctx, search, loop=self.bot.loop)
-
         await player.queue.put(source)
 
     @commands.command(name='pause', aliases=aliases['pause'], help='Pauses the playing music')
@@ -222,16 +229,25 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
             return await ctx.send(embed=embed)
 
         player = self.get_player(ctx)
+        if not player.current:
+            embed = discord.Embed(title='', description='I am currently not playing anything', color=discord.Color.green())
+            return await ctx.send(embed=embed)
         
         fmt = f'\n__Now Playing__:\n[{vc.source.title}]({vc.source.url}) | `{duration2time(vc.source.duration)} Requested by: {vc.source.requester}`\n\n__Up Next:__\n'
-        if player.queue.empty():
-            fmt += '**Queue is empty**\n\n'
-        else:
+        if not player.queue.empty():
             upcoming = list(itertools.islice(player.queue._queue, 0, int(len(player.queue._queue))))
-            fmt += '\n'.join(f"`{(upcoming.index(_)) + 1}.` [{_['title']}]({_['url']}) | ` {duration2time(_['duration'])} Requested by: {_['requester']}`\n" for _ in upcoming)
-            fmt += f'\n**{len(upcoming)} songs in queue**'
+            fmt += '\n'.join(f"`{idx + 1}.` [{_['title']}]({_['url']}) | ` {duration2time(_['duration'])} Requested by: {_['requester']}`\n" for idx, _ in enumerate(upcoming))
+            fmt += f'\n**{len(upcoming)} songs in queue**\n\n'   
+        
+        if not player.waiting.empty():
+            upcoming = list(itertools.islice(player.waiting._queue, 0, int(len(player.waiting._queue))))         
+            fmt += '\n'.join(f"`{idx + 1}.` [{search}] | ` Unknown duration Requested by: {ctx.author}`\n" for idx, [ctx, search] in enumerate(upcoming))
+            fmt += f'\n**{len(upcoming)} songs in waiting to be searched**\n\n'
+        
+        if player.queue.empty() and player.waiting.empty():
+            fmt += '**Queue is empty**\n\n'
 
-        embed = discord.Embed(title=f'Queue for {ctx.guild.name}', description=fmt, color=discord.Color.green())
+        embed = discord.Embed(title=f'Queue for {ctx.guild.name}', description=fmt.rstrip(), color=discord.Color.green())
 
         await ctx.send(embed=embed)
 
@@ -305,8 +321,7 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
         player.loop = not player.loop
         
         if not player.loop:
-            await ctx.send('**Stopped looping** ↩') 
-            return
+            return await ctx.send('**Stopped looping** ↩') 
 
         await ctx.send('**Looping** 🔁')
 
@@ -321,8 +336,7 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
         player.shuffle = not player.shuffle
         
         if not player.shuffle:
-            await ctx.send('**Stopped shuffling** ➡') 
-            return
+            return await ctx.send('**Stopped shuffling** ➡') 
 
         await ctx.send('**Shuffling** 🔀')
 

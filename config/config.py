@@ -1,3 +1,3 @@
-music_command_prefix='\\'
-img_command_prefix='-'
+music_cmd_prefix='\\'
+img_cmd_prefix='-'
 be_funny=True
