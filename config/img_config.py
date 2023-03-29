@@ -26,6 +26,7 @@ model_map = {
     'orangechillmix': 'orangechillmix_v70.safetensors [a92311f07a]',
     'pastelmix': 'pastelMixStylizedAnime_pastelMixPrunedFP16.safetensors [d01a68ae76]',
     'perfectworld': 'perfectWorld_v2Baked.safetensors [79e42fb744]',
+    'realisticvision': 'realisticVisionV20_v20.safetensors [e6415c4892]',
     'revanimated': 'revAnimated_v11.safetensors [d725be5d18]',
 }
 
@@ -41,5 +42,24 @@ valid_options = {
     'cfg_scale': list(np.arange(1, 30.5, 0.5)),
     'height': [512, 768],
     'width': [512, 768],
-    
 }
+
+loras = [
+    '<lora:aliceNikke_v30:1>',
+    '<lora:amberGenshinImpact_flexibleV1:1>',
+    '<lora:arknightsLappland_v20:1>',
+    '<lora:dehyaGenshinImpact_v2NAI:1>',
+    '<lora:eulaRealisticGenshin_eula:1>',
+    '<lora:fashionGirl_v50:1>',
+    '<lora:fischlGenshinImpact_fischlGenshinImpact:1>',
+    '<lora:ganyuGenshinImpact_offset:1>',
+    '<lora:genshinImpactNoelle_nV1:1>',
+    '<lora:kleeGenshinImpact_kleeGenshinImpact:1>',
+    '<lora:kukiShinobuGenshin_kukiShinobuGenshin:1>',
+    '<lora:mintyDogesDogeStyle_v1:1>',
+    '<lora:raidenShogunRealistic_raidenshogun:1>',
+    '<lora:signoraGenshinImpact_v25:1>',
+    '<lora:stLouisLuxuriousWheels_v1:1>',
+    '<lora:xianglingGenshinImpact_xianglingGenshinImpact:1>',
+    '<lora:yaeMikoRealistic_yaemikoMixed:1>',
+]

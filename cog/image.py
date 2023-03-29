@@ -18,6 +18,7 @@ aliases = {
     'sd': ['stable_diffusion', 'diffuse'],
     'sd_options': ['so'],
     'sd_print_options': ['spo'],
+    'sd_loras': ['loras'],
 }
 
 class ImageCog(commands.Cog, name='Image Generator' if not config.be_funny else '不可以色色'):
@@ -122,6 +123,10 @@ class ImageCog(commands.Cog, name='Image Generator' if not config.be_funny else 
     async def sd_print_options_(self, ctx):
         payload = await self.get_payload(ctx)
         await ctx.send(payload)
+
+    @commands.command('sd_loras', aliases=aliases['sd_loras'], help='List loras available')
+    async def sd_loras_(self, ctx):
+        await ctx.send(img_config.loras)
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(ImageCog())
