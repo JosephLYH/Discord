@@ -317,7 +317,6 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
     @commands.command(name='loop', aliases=aliases['loop'], help='Triggers loop')
     async def loop_(self, ctx: commands.Context):
         vc = ctx.voice_client
-        
         if not vc:
             await ctx.invoke(self.connect_)
 
@@ -332,7 +331,6 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
     @commands.command(name='shuffle', aliases=aliases['shuffle'], help='Triggers shuffle')
     async def shuffle_(self, ctx: commands.Context):
         vc = ctx.voice_client
-        
         if not vc:
             await ctx.invoke(self.connect_)
 
@@ -345,9 +343,18 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
         await ctx.send('**Shuffling** 🔀')
 
     @commands.command(name='random', aliases=aliases['random'], help='Play random music')
-    async def random_(self, ctx: commands.Context):
-        await ctx.send('**Random** 🎲')
-        await ctx.invoke(self.play_, music_config.song_choices[random.choice(list(music_config.song_choices.keys()))])
+    async def random_(self, ctx: commands.Context, num=1):
+        vc = ctx.voice_client
+        if not vc:
+            await ctx.invoke(self.connect_)
+
+        songs = list(music_config.song_choices.values())
+        random.shuffle(songs)
+        num = min(num, len(songs))
+        
+        await ctx.send(f'**Random {num} music** 🎲')
+        for i in range(num):
+            await ctx.invoke(self.play_, songs[i])
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(MusicCog(bot))
