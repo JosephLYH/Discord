@@ -30,7 +30,7 @@ model_map = {
     'revanimated': 'revAnimated_v11.safetensors [d725be5d18]',
 }
 
-sfw_models = ['counterfeitv2.5', 'dreamshaper', 'pastelmix', 'revanimated']
+sfw_models = ['counterfeitv2.5', 'dreamshaper', 'pastelmix', 'realisticvision', 'revanimated']
 
 nsfw_models = [key for key in model_map.keys() if key not in sfw_models]
 
@@ -62,4 +62,5 @@ loras = [
     '<lora:stLouisLuxuriousWheels_v1:1>',
     '<lora:xianglingGenshinImpact_xianglingGenshinImpact:1>',
     '<lora:yaeMikoRealistic_yaemikoMixed:1>',
+    '<lora:ahriLeagueOfLegends_ahri45Suggested:1>',
 ]

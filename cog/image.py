@@ -18,7 +18,7 @@ aliases = {
     'sd': ['stable_diffusion', 'diffuse'],
     'sd_options': ['so'],
     'sd_print_options': ['spo'],
-    'sd_loras': ['loras'],
+    'sd_loras': ['loras', 'lora'],
 }
 
 class ImageCog(commands.Cog, name='Image Generator' if not config.be_funny else '不可以色色'):
