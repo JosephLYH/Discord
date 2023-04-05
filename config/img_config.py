@@ -21,6 +21,7 @@ model_map = {
     'aoaoko': 'aoaokoPVCStyleModel_pvcAOAOKO.safetensors [cf64507cef]',
     'chilloutmix': 'chilloutmix_NiPrunedFp16Fix.safetensors [59ffe2243a]',
     'counterfeitv2.5': 'CounterfeitV25_25.safetensors [a074b8864e]',
+    'deliberatev2': 'deliberate_v2.safetensors [9aba26abdf]',
     'dreamshaper': 'dreamshaper_4BakedVae.safetensors [7f16bbcd80]',
     'grapefruit': 'grapefruitHentaiModel_grapefruitv41.safetensors [c590550ea5]',
     'orangechillmix': 'orangechillmix_v70.safetensors [a92311f07a]',
