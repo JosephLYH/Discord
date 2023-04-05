@@ -2,12 +2,14 @@ import os
 
 import poe
 
+from config import config, chat_config
 from discord.ext import commands
 
 aliases = {
     'message': ['m', 'msg'],
     'purge': ['p', 'prg', 'reset'],
-    'model': ['mdl']
+    'model': ['mdl'],
+    'dnd': ['d', 'play'],
 }
 
 class ChatCog(commands.Cog, name='Chatbot'):
@@ -17,25 +19,26 @@ class ChatCog(commands.Cog, name='Chatbot'):
         self.history = {}
         self.model = 'chinchilla'
 
-    async def get_history(self, ctx: commands.Context):
-        if ctx.author.id in self.cfgs.keys():
-            return self.history[ctx.author.id]
-        
-        self.history = []
-
-        return self.history[ctx.author.id]
-
     @commands.command('message', aliases=aliases['message'], help='Send message')
     async def message_(self, ctx, *args):
-        message = ' '.join(args)
+        message = f'{ctx.author.name}: '
+        message += ' '.join(args)
+        
+        for chunk in self.client.send_message(self.model, message, with_chat_break=False):
+            pass
 
-        reply = ''.join([chunk['text_new'] for chunk in self.client.send_message('chinchilla', message, with_chat_break=False)])
-        await ctx.send(reply)
+        await ctx.send(chunk['text'])
 
     @commands.command('purge', aliases=aliases['purge'], help='Purge conversation')
     async def purge_(self, ctx, *args):
-        self.client.purge_conversation('chinchilla')
-        await ctx.send('Conversation purged')
+        # self.client.purge_conversation('chinchilla')
+        self.client.send_chat_break(self.model)
+
+        message = 'Conversation purged' if not config.be_funny else 'You have bonked me so hard I have forgotten everything'
+        await ctx.send(message)
+
+        message = chat_config.starting_prompt
+        self.client.send_message(self.model, message, with_chat_break=False)
 
     @commands.command('model', aliases=aliases['model'], help='Select model')
     async def model_(self, ctx, *args):
@@ -46,12 +49,16 @@ class ChatCog(commands.Cog, name='Chatbot'):
             return
 
         if model not in self.client.bot_names:
-            models = self.client.bot_names
             await ctx.send(self.client.bot_names)
             return
         
         self.model = model
         await ctx.send(f'Model set to {self.client.bot_names[model]}')
+
+    @commands.command('dnd', aliases=aliases['dnd'], help='Start DnD session')
+    async def dnd_(self, ctx, *args):
+        self.client.send_chat_break(self.model)
+        await ctx.invoke(self.message_, chat_config.dnd_prompt)
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(ChatCog())
