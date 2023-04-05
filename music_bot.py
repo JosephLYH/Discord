@@ -21,7 +21,7 @@ async def on_ready():
         status=discord.Status.online, 
         activity=discord.Game(name=f'Music, type {config.music_cmd_prefix}help'))
 
-# main function6
+# main function
 async def main():
     await bot.load_extension('cog.music')
 
