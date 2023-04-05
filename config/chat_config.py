@@ -1,7 +1,12 @@
+from config import config
+
 starting_prompt =   """Do not mention your name or any names of users in later messages.
                     When playing a game of Dungeons and Dragons, try to be descriptive and creative."""
 
-worlds = {
+if config.be_funny:
+    starting_prompt += 'Try to reply in a humourous tone when appropriate.'
+
+dnd_worlds = {
     'Azeroth': """The game world is a fantasy world where magic is real and anything can happen.
                 It takes place in the world of Azeroth, a world of swords and sorcery.
                 The game is set in the year 20XX, a time of great turmoil and strife.
@@ -17,7 +22,7 @@ dnd_prompt = """Let's play a game of dungeon and dragons.
                 The dungeon master will then describe the results of the action.
                 The player will then respond with another action and so on.
                 
-                """ + worlds['Azeroth'] + """
+                """ + dnd_worlds['Azeroth'] + """
 
                 The game begins in a random location in the world.
                 

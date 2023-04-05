@@ -18,6 +18,9 @@ class ChatCog(commands.Cog, name='Chatbot'):
         self.client = poe.Client(os.getenv('POE_TOKEN'))
         self.history = {}
         self.model = 'chinchilla'
+        
+        self.client.send_chat_break(self.model)
+        self.client.send_message(self.model, chat_config.starting_prompt, with_chat_break=False)
 
     @commands.command('message', aliases=aliases['message'], help='Send message')
     async def message_(self, ctx, *args):
@@ -26,19 +29,16 @@ class ChatCog(commands.Cog, name='Chatbot'):
         
         for chunk in self.client.send_message(self.model, message, with_chat_break=False):
             pass
-
         await ctx.send(chunk['text'])
 
     @commands.command('purge', aliases=aliases['purge'], help='Purge conversation')
     async def purge_(self, ctx, *args):
-        # self.client.purge_conversation('chinchilla')
         self.client.send_chat_break(self.model)
 
-        message = 'Conversation purged' if not config.be_funny else 'You have bonked me so hard I have forgotten everything'
+        message = 'Conversation purged' if not config.be_funny else 'You have bonked me so hard, I have forgetten everything.'
         await ctx.send(message)
 
-        message = chat_config.starting_prompt
-        self.client.send_message(self.model, message, with_chat_break=False)
+        self.client.send_message(self.model, chat_config.starting_prompt, with_chat_break=False)
 
     @commands.command('model', aliases=aliases['model'], help='Select model')
     async def model_(self, ctx, *args):
