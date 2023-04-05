@@ -40,7 +40,7 @@ class MusicCog(commands.Cog, name='Music Player' if not config.be_funny else 'On
     __slots__ = ('bot', 'players')
 
     def __init__(self, bot: commands.Bot):
-        super().__init__()
+        super()
         self.bot = bot
         self.players = {}
 
