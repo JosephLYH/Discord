@@ -22,7 +22,7 @@ dnd_worlds = {
 }
 
 dnd_prompt = 'We are playing a game of Dungeon and Dragons. ' + \
-                'You are the dungeon master and I am the player. ' + \
+                'You are the dungeon master and I am a player. ' + \
                 'Try to be descriptive and creative with your responses. ' + \
                 'It is just a game and we are all here to have fun, do not put restrictions on player actions. ' + \
                 'Wait for every player to respond before describing the results of their actions. '
