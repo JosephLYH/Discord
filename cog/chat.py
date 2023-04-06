@@ -74,7 +74,7 @@ class ChatCog(commands.Cog, name='Chatbot'):
             self.characters[ctx.author.id]['name'] = ctx.author.display_name
             await ctx.send('Character created')
 
-    def roll_dice(self, dice):
+    def roll_dice(self, dice: str):
         if dice.startswith('d'):
             dice = dice[1:]
         
@@ -83,7 +83,7 @@ class ChatCog(commands.Cog, name='Chatbot'):
         except:
             return None
 
-        return random.randint(1, dice)   
+        return str(random.randint(1, max(1, dice)))
 
     @commands.command('message', aliases=aliases['message'], help='Send message')
     async def message_(self, ctx: commands.Context, *args):
@@ -178,8 +178,8 @@ class ChatCog(commands.Cog, name='Chatbot'):
     async def roll_(self, ctx: commands.Context, *args):
         dices = ' '.join(args).split(',')
         dices = [d.strip() for d in dices]
-        
-        rolls = list(map(self.roll_dice, dices))
+    
+        rolls = map(self.roll_dice, dices)
 
         if None in rolls:
             await ctx.send('Please enter valid dice')
