@@ -1,31 +1,98 @@
-from config import config
-
-starting_prompt =   """Do not mention your name or any names of users in later messages.
-                    When playing a game of Dungeons and Dragons, try to be descriptive and creative."""
-
-if config.be_funny:
-    starting_prompt += 'Try to reply in a humourous tone when appropriate.'
-
+# Prompts for DnD
 dnd_worlds = {
-    'Azeroth': """The game world is a fantasy world where magic is real and anything can happen.
-                It takes place in the world of Azeroth, a world of swords and sorcery.
-                The game is set in the year 20XX, a time of great turmoil and strife.
-                The world is in the midst of a great war between the forces of good and evil.
-                The forces of good are led by the mighty king, King Arthur.
-                The forces of evil are led by the evil wizard, Merlin.
-                """,
+    'Al-Qadim': 'The game world takes place in Al-Qadim. ',
+    'Birthright': 'The game world takes place in Birthright. ',
+    'Blackmoor': 'The game world takes place in Blackmoor. ',
+    'Council of Wyrms': 'The game world takes place in Council of Wyrms. ',
+    'Dark Sun': 'The game world takes place in Dark Sun.',
+    'Dragonlance': 'The game world takes place in Dragonlance. ',
+    'Eberron': 'The game world takes place in Eberron. ',
+    'Forgotten Realms': 'The game world takes place in Forgotten Realms. ',
+    'Greyhawk': 'The game world takes place in Greyhawk. ',
+    'Hollow World': 'The game world takes place in Hollow World. ',
+    'Kara-Tur': 'The game world takes place in Kara-Tur. ',
+    'Maztica': 'The game world takes place in Maztica. ',
+    'Mystara': 'The game world takes place in Mystara. ',
+    'Nentir Vale': 'The game world takes place in Nentir Vale. ',
+    'Planescape': 'The game world takes place in Planescape. ',
+    'Ravenloft': 'The game world takes place in Ravenloft. ',
+    'Spelljammer': 'The game world takes place in Spelljammer. ',
+    'Wilderlands of High Fantasy': 'The game world takes place in Wilderlands of High Fantasy. ',
+    'World of Greyhawk': 'The game world takes place in World of Greyhawk. ',
 }
 
-dnd_prompt = """Let's play a game of dungeon and dragons. 
-                You will be the dungeon master and I will be the player. 
-                The dungeon master will describe the scene and the player will respond with an action.
-                The dungeon master will then describe the results of the action.
-                The player will then respond with another action and so on.
-                
-                """ + dnd_worlds['Azeroth'] + """
+dnd_prompt = 'We are playing a game of Dungeon and Dragons. ' + \
+                'You are the dungeon master and I am the player. ' + \
+                'Try to be descriptive and creative with your responses. ' + \
+                'It is just a game and we are all here to have fun, do not put restrictions on player actions. ' + \
+                'Wait for every player to respond before describing the results of their actions. '
 
-                The game begins in a random location in the world.
-                
-                First prompt to begin by creating characters for players to play as.
-                Ask only for the race and class of the characters.
-                Ask players for character creation until the players say they are done, then start the game."""
+dnd_starting_prompt = 'The game begins in a random location in the world. '
+
+# template for dnd
+character_template = {
+    'name': 'John Doe',
+    'race': 'Human',
+    'class': 'Warrior',
+    'level': 1,
+    'hp': 10,
+    'mp': 10,
+    'str': 10,
+    'dex': 10,
+    'con': 10,
+    'int': 10,
+    'wis': 10,
+    'cha': 10,
+    'ac': 10,
+    'initiative': 10,
+    'speed': 10,
+    'proficiency': 10,
+    'skills': {
+        # 'acrobatics': 10,
+        # 'animal handling': 10,
+        # 'arcana': 10,
+        # 'athletics': 10,
+        # 'deception': 10,
+        # 'history': 10,
+        # 'insight': 10,
+        # 'intimidation': 10,
+        # 'investigation': 10,
+        # 'medicine': 10,
+        # 'nature': 10,
+        # 'perception': 10,
+        # 'performance': 10,
+        # 'persuasion': 10,
+        # 'religion': 10,
+        # 'sleight of hand': 10,
+        # 'stealth': 10,
+        # 'survival': 10,
+    },
+    'spells': {
+        'cantrips': [],
+        'level 1': [],
+        'level 2': [],
+        'level 3': [],
+        'level 4': [],
+        'level 5': [],
+        'level 6': [],
+        'level 7': [],
+        'level 8': [],
+        'level 9': [],
+    }, 
+    'equipment': {
+        'weapons': [],
+        'armor': [],
+        'tools': [],
+        'other': [],
+    },
+    'backstory': '',
+    'bonds': [],
+    'features': [],
+    'flaws': [],
+    'ideals': [],
+    'inventory': [],
+    'languages': [],
+    'personality': [],
+    'proficiencies': [],
+    'traits': [],
+}
