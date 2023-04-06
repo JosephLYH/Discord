@@ -7,7 +7,7 @@ import poe
 from config import chat_config, config
 from discord.ext import commands
 
-CHUNK_MAX_SIZE = 1500
+CHUNK_MAX_SIZE = 2000
 
 aliases = {
     'message': ['m', 'msg'],
@@ -125,7 +125,8 @@ class ChatCog(commands.Cog, name='Chatbot'):
         self.in_dnd = True
         await self.send_chat_break()
         reply = await self.send_message(chat_config.dnd_starting_prompt)
-        await ctx.send(reply)
+        for chunk in [reply[i:i+CHUNK_MAX_SIZE] for i in range(0, len(reply), CHUNK_MAX_SIZE)]:
+            await ctx.send(chunk)
 
     @commands.command('world', aliases=aliases['world'], help='Select world')
     async def world_(self, ctx: commands.Context, *args):
