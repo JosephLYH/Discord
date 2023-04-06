@@ -185,7 +185,7 @@ class ChatCog(commands.Cog, name='Chatbot'):
             await ctx.send('Please enter valid dice')
             return
 
-        await ctx.invoke(self.message_, 'I rolled ' + ', '.join(rolls))
+        await ctx.invoke(self.message_, 'I rolled ' + ', '.join(list(rolls)))
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(ChatCog())
