@@ -6,6 +6,8 @@ import poe
 from config import chat_config, config
 from discord.ext import commands
 
+CHUNK_MAX_SIZE = 2000
+
 aliases = {
     'message': ['m', 'msg'],
     'purge': ['p', 'prg', 'reset'],
@@ -78,7 +80,7 @@ class ChatCog(commands.Cog, name='Chatbot'):
         
         message += ' '.join(args)
         reply = await self.send_message(message)
-        for chunk in reply.split('\n'):
+        for chunk in [reply[i:i+CHUNK_MAX_SIZE] for i in range(0, len(reply), CHUNK_MAX_SIZE)]:
             await ctx.send(chunk)
 
     @commands.command('purge', aliases=aliases['purge'], help='Purge conversation')
