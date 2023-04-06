@@ -7,7 +7,7 @@ import poe
 from config import chat_config, config
 from discord.ext import commands
 
-CHUNK_MAX_SIZE = 2000
+CHUNK_MAX_SIZE = 1500
 
 aliases = {
     'message': ['m', 'msg'],
