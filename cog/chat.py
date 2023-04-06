@@ -47,6 +47,10 @@ class ChatCog(commands.Cog, name='Chatbot'):
         
         self.client.send_chat_break(self.model)
 
+    async def safe_send(self, ctx: commands.Context, message):
+        for chunk in [message[i:i+CHUNK_MAX_SIZE] for i in range(0, len(message), CHUNK_MAX_SIZE)]: 
+            await ctx.send(message)
+
     async def send_chat_break(self):
         try:
             self.client.send_chat_break(self.model)
@@ -94,8 +98,7 @@ class ChatCog(commands.Cog, name='Chatbot'):
         
         message += ' '.join(args)
         reply = await self.send_message(message)
-        for chunk in [reply[i:i+CHUNK_MAX_SIZE] for i in range(0, len(reply), CHUNK_MAX_SIZE)]:
-            await ctx.send(chunk)
+        await ctx.invoke(self.safe_send, reply)
 
     @commands.command('purge', aliases=aliases['purge'], help='Purge conversation')
     async def purge_(self, ctx: commands.Context, *args):
@@ -125,8 +128,7 @@ class ChatCog(commands.Cog, name='Chatbot'):
         self.in_dnd = True
         await self.send_chat_break()
         reply = await self.send_message(chat_config.dnd_starting_prompt)
-        for chunk in [reply[i:i+CHUNK_MAX_SIZE] for i in range(0, len(reply), CHUNK_MAX_SIZE)]:
-            await ctx.send(chunk)
+        await ctx.invoke(self.safe_send, reply)
 
     @commands.command('world', aliases=aliases['world'], help='Select world')
     async def world_(self, ctx: commands.Context, *args):
