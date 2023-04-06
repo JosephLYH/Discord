@@ -16,6 +16,7 @@ aliases = {
     'world': ['w', 'wrld'],
     'character': ['c', 'char'],
     'view': ['v', 'show'],
+    'new': ['n', 'create'],
 }
 
 def nested_get(dictionary, keys):    
@@ -68,7 +69,7 @@ class ChatCog(commands.Cog, name='Chatbot'):
     async def create_default_character(self, ctx: commands.Context):
         if not self.characters.get(ctx.author.id):
             self.characters[ctx.author.id] = copy.deepcopy(chat_config.character_template)
-            self.characters[ctx.author.id]['name'] = ctx.author.name
+            self.characters[ctx.author.id]['name'] = ctx.author.display_name
             await ctx.send('Character created')
 
     @commands.command('message', aliases=aliases['message'], help='Send message')
@@ -118,10 +119,11 @@ class ChatCog(commands.Cog, name='Chatbot'):
         world = ' '.join(args)
 
         if world not in chat_config.dnd_worlds:
-            await ctx.send(f'Choose from {chat_config.dnd_worlds}')
+            await ctx.send(f'Choose from {list(chat_config.dnd_worlds.keys())}')
             return
 
         self.world = world
+        await ctx.send(f'World set to {world}')
 
     @commands.command('character', aliases=aliases['character'], help='Create character or modify character')
     async def character_(self, ctx: commands.Context, key=None, *values):
@@ -135,6 +137,10 @@ class ChatCog(commands.Cog, name='Chatbot'):
             await ctx.send(self.characters[ctx.author.id])
             return
 
+        if type(nested_get(self.characters[ctx.author.id], keys)) == type([]):
+            value = value.split(',')
+            value = [v.strip() for v in value]
+
         if type(nested_get(self.characters[ctx.author.id], keys)) != type(value) and (len(keys) != 2 and keys[0] != 'skills'):
             await ctx.send('Please enter valid new value')
             await ctx.send(nested_get(self.characters[ctx.author.id], keys))
@@ -145,6 +151,12 @@ class ChatCog(commands.Cog, name='Chatbot'):
 
     @commands.command('view', aliases=aliases['view'], help='View character')
     async def view_(self, ctx: commands.Context, *args):
+        await ctx.invoke(self.create_default_character)
+        await ctx.send(self.characters[ctx.author.id])
+
+    @commands.command('new', aliases=aliases['new'], help='Generate new character')
+    async def view_(self, ctx: commands.Context, *args):
+        del self.characters[ctx.author.id]
         await ctx.invoke(self.create_default_character)
         await ctx.send(self.characters[ctx.author.id])
 
