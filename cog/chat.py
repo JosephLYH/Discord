@@ -22,14 +22,31 @@ class ChatCog(commands.Cog, name='Chatbot'):
         self.client.send_chat_break(self.model)
         self.client.send_message(self.model, chat_config.starting_prompt, with_chat_break=False)
 
+    async def send_chat_break(self):
+        try:
+            self.client.send_chat_break(self.model)
+        except:
+            self.client = poe.Client(os.getenv('POE_TOKEN'))
+            self.client.send_chat_break(self.model)
+
+    async def send_message(self, message):
+        try:
+            for chunk in self.client.send_message(self.model, message, with_chat_break=False):
+                pass
+        except:
+            self.client = poe.Client(os.getenv('POE_TOKEN'))
+            for chunk in self.client.send_message(self.model, message, with_chat_break=False):
+                pass
+
+        return chunk['text']
+
     @commands.command('message', aliases=aliases['message'], help='Send message')
     async def message_(self, ctx, *args):
         message = f'{ctx.author.name}: '
         message += ' '.join(args)
         
-        for chunk in self.client.send_message(self.model, message, with_chat_break=False):
-            pass
-        await ctx.send(chunk['text'])
+        reply = await self.send_message(message)
+        await ctx.send(reply)
 
     @commands.command('purge', aliases=aliases['purge'], help='Purge conversation')
     async def purge_(self, ctx, *args):
@@ -38,7 +55,7 @@ class ChatCog(commands.Cog, name='Chatbot'):
         message = 'Conversation purged' if not config.be_funny else 'You have bonked me so hard, I have forgetten everything.'
         await ctx.send(message)
 
-        self.client.send_message(self.model, chat_config.starting_prompt, with_chat_break=False)
+        await self.send_message(chat_config.starting_prompt)
 
     @commands.command('model', aliases=aliases['model'], help='Select model')
     async def model_(self, ctx, *args):
@@ -57,7 +74,7 @@ class ChatCog(commands.Cog, name='Chatbot'):
 
     @commands.command('dnd', aliases=aliases['dnd'], help='Start DnD session')
     async def dnd_(self, ctx, *args):
-        self.client.send_chat_break(self.model)
+        await self.send_chat_break()
         await ctx.invoke(self.message_, chat_config.dnd_prompt)
 
 async def setup(bot: commands.Bot):
