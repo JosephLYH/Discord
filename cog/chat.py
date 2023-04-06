@@ -176,7 +176,9 @@ class ChatCog(commands.Cog, name='Chatbot'):
 
     @commands.command('roll', aliases=aliases['roll'], help='Roll dice')
     async def roll_(self, ctx: commands.Context, *args):
-        dices = ' '.join(args).split(',').strip()
+        dices = ' '.join(args).split(',')
+        dices = [d.strip() for d in dices]
+        
         rolls = list(map(self.roll_dice, dices))
 
         if None in rolls:
