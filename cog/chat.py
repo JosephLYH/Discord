@@ -1,5 +1,6 @@
 import copy
 import os
+import random
 
 import poe
 
@@ -17,6 +18,7 @@ aliases = {
     'character': ['c', 'char'],
     'view': ['v', 'show'],
     'new': ['n', 'create'],
+    'roll': ['r', 'dice'],
 }
 
 def nested_get(dictionary, keys):    
@@ -71,6 +73,17 @@ class ChatCog(commands.Cog, name='Chatbot'):
             self.characters[ctx.author.id] = copy.deepcopy(chat_config.character_template)
             self.characters[ctx.author.id]['name'] = ctx.author.display_name
             await ctx.send('Character created')
+
+    def roll_dice(self, dice):
+        if dice.startswith('d'):
+            dice = dice[1:]
+        
+        try:
+            dice = int(dice)
+        except:
+            return None
+
+        return random.randint(1, dice)   
 
     @commands.command('message', aliases=aliases['message'], help='Send message')
     async def message_(self, ctx: commands.Context, *args):
@@ -160,6 +173,17 @@ class ChatCog(commands.Cog, name='Chatbot'):
             del self.characters[ctx.author.id]
         await ctx.invoke(self.create_default_character)
         await ctx.send(self.characters[ctx.author.id])
+
+    @commands.command('roll', aliases=aliases['roll'], help='Roll dice')
+    async def roll_(self, ctx: commands.Context, *args):
+        dices = ' '.join(args).split(',').strip()
+        rolls = list(map(self.roll_dice, dices))
+
+        if None in rolls:
+            await ctx.send('Please enter valid dice')
+            return
+
+        await ctx.invoke(self.message_, 'I rolled ' + ', '.join(rolls))
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(ChatCog())
