@@ -156,7 +156,8 @@ class ChatCog(commands.Cog, name='Chatbot'):
 
     @commands.command('new', aliases=aliases['new'], help='Generate new character')
     async def view_(self, ctx: commands.Context, *args):
-        del self.characters[ctx.author.id]
+        if self.characters.get(ctx.author.id):
+            del self.characters[ctx.author.id]
         await ctx.invoke(self.create_default_character)
         await ctx.send(self.characters[ctx.author.id])
 
