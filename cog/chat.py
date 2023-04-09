@@ -49,7 +49,7 @@ class ChatCog(commands.Cog, name='Chatbot'):
 
     async def safe_send(self, ctx: commands.Context, message):
         for chunk in [message[i:i+CHUNK_MAX_SIZE] for i in range(0, len(message), CHUNK_MAX_SIZE)]: 
-            await ctx.send(message)
+            await ctx.send(chunk)
 
     async def send_chat_break(self):
         try:
